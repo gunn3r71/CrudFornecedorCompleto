@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using App.Models.Enums;
+using CRUD.Business.Models.Enums;
 
-namespace App.Models
+namespace CRUD.Business.Models
 {
     public class Fornecedor : Entity
     {

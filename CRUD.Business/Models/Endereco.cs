@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace App.Models
+namespace CRUD.Business.Models
 {
     public class Endereco : Entity
     {

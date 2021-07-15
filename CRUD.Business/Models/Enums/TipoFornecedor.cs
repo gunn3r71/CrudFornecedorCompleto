@@ -1,4 +1,4 @@
-﻿namespace App.Models.Enums
+﻿namespace CRUD.Business.Models.Enums
 {
     public enum TipoFornecedor
     {

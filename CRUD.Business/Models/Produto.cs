@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace App.Models
+namespace CRUD.Business.Models
 {
     public class Produto : Entity
     {
