@@ -1,4 +1,4 @@
-﻿using CRUD.App.Models;
+﻿using CRUD.Application.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CRUD.App.Controllers
+namespace CRUD.Application.Controllers
 {
     public class HomeController : Controller
     {

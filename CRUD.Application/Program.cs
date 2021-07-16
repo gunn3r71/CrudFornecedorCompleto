@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CRUD.App
+namespace CRUD.Application
 {
     public class Program
     {
