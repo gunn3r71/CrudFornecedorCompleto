@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CRUD.Business.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using CRUD.Business.Models;
 
 namespace CRUD.Business.Interfaces
 {

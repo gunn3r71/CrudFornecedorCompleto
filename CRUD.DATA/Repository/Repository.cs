@@ -1,16 +1,16 @@
-﻿using System;
+﻿using CRUD.Business.Interfaces;
+using CRUD.Business.Models;
+using CRUD.Data.Context;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CRUD.Business.Interfaces;
-using CRUD.Business.Models;
-using CRUD.Data.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace CRUD.Data.Repository
 {
-    public abstract class Repository <T> : IRepository<T> where T : Entity, new()
+    public abstract class Repository<T> : IRepository<T> where T : Entity, new()
     {
         protected readonly AppDbContext _context;
         protected readonly DbSet<T> _dbEntity;
@@ -28,7 +28,7 @@ namespace CRUD.Data.Repository
         }
 
         public virtual async Task Atualizar(T entity)
-        { 
+        {
             _dbEntity.Update(entity);
             await SaveChanges();
         }
@@ -47,7 +47,7 @@ namespace CRUD.Data.Repository
         public virtual async Task<IList<T>> ObterTodos()
         {
             return await _dbEntity.ToListAsync();
-        }   
+        }
 
         public async Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate)
         {
@@ -61,7 +61,7 @@ namespace CRUD.Data.Repository
 
         public void Dispose()
         {
-            _context?.Dispose(); 
+            _context?.Dispose();
         }
     }
 }

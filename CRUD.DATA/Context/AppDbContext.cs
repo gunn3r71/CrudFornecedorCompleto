@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using CRUD.Business.Models;
+﻿using CRUD.Business.Models;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUD.Data.Context

@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using CRUD.Business.Interfaces;
+﻿using CRUD.Business.Interfaces;
 using CRUD.Business.Models;
 using CRUD.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Threading.Tasks;
 
 namespace CRUD.Data.Repository
 {

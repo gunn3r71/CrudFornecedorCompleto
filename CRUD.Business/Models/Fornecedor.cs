@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using CRUD.Business.Models.Enums;
+﻿using CRUD.Business.Models.Enums;
+using System.Collections.Generic;
 
 namespace CRUD.Business.Models
 {
