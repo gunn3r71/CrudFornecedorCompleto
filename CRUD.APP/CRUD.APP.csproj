@@ -21,4 +21,8 @@
     <ProjectReference Include="..\CRUD.DATA\CRUD.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\imagens\" />
+  </ItemGroup>
+
 </Project>

@@ -33,7 +33,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Imagem)
+                <img src="~/imagens/@item.Imagem" alt="Imagem de produto" class="img-produto">
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nome)

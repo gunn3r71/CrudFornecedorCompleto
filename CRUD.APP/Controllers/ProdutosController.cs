@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using CRUD.APP.ViewModels;
 using CRUD.Business.Interfaces;
 using CRUD.Business.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace CRUD.APP.Controllers
 {
@@ -59,9 +61,17 @@ namespace CRUD.APP.Controllers
         {
             produtoViewModel = await PopularFornecedores(produtoViewModel);
             if (!ModelState.IsValid) return View(produtoViewModel);
-            
+
+            var imgPrefixo = Guid.NewGuid() + "_";
+
+            if (!await UploadArquivo(produtoViewModel.ImagemUpload, imgPrefixo))
+            {
+                return View(produtoViewModel);
+            }
+
             var produto = _mapper.Map<Produto>(produtoViewModel);
 
+            produto.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
             await _produtoRepository.Adicionar(produto);
 
             return RedirectToAction(nameof(Index));
@@ -100,45 +110,67 @@ namespace CRUD.APP.Controllers
         }
 
 
-    // GET: Produtos/Delete/5
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        var produtoViewModel = await ObterProduto(id);
-
-        if (produtoViewModel == null)
+        // GET: Produtos/Delete/5
+        public async Task<IActionResult> Delete(Guid id)
         {
-            return NotFound();
+            var produtoViewModel = await ObterProduto(id);
+
+            if (produtoViewModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(produtoViewModel);
         }
 
-        return View(produtoViewModel);
+        // POST: Produtos/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            var produtoViewModel = await ObterProduto(id);
+            if (produtoViewModel == null) return NotFound();
+
+            await _produtoRepository.Remover(id);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<ProdutoViewModel> ObterProduto(Guid id)
+        {
+            var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
+            produto.Fornecedores =
+                _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
+
+            return produto;
+        }
+
+        private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
+        {
+            produto.Fornecedores =
+                _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
+
+            return produto;
+        }
+
+        private async Task<bool> UploadArquivo(IFormFile arquivo, string imgPrefixo)
+        {
+            if (arquivo.Length <= 0) return false;
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagens", imgPrefixo + arquivo.FileName);
+
+            if (System.IO.File.Exists(path))
+            {
+                ModelState.AddModelError(String.Empty, "Já existe um arquivo com este nome!");
+                return false;
+            }
+
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await arquivo.CopyToAsync(stream);
+            }
+
+            return true;
+        }
     }
-
-    // POST: Produtos/Delete/5
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(Guid id)
-    {
-        var produtoViewModel = await ObterProduto(id);
-        await _produtoRepository.Remover(id);
-
-        return RedirectToAction(nameof(Index));
-    }
-
-    private async Task<ProdutoViewModel> ObterProduto(Guid id)
-    {
-        var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
-        produto.Fornecedores =
-            _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
-
-        return produto;
-    }
-
-    private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
-    {
-        produto.Fornecedores =
-            _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos());
-
-        return produto;
-    }
-}
 }
