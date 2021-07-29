@@ -46,7 +46,7 @@ namespace CRUD.Data.Repository
 
         public virtual async Task<IList<T>> ObterTodos()
         {
-            return await _dbEntity.ToListAsync();
+            return await _dbEntity.AsNoTracking().ToListAsync();
         }
 
         public async Task<IEnumerable<T>> Buscar(Expression<Func<T, bool>> predicate)
