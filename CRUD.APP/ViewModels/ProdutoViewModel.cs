@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using CRUD.APP.Extensions;
 using Microsoft.AspNetCore.Http;
 
 namespace CRUD.APP.ViewModels
@@ -26,6 +26,7 @@ namespace CRUD.APP.ViewModels
         public IFormFile ImagemUpload { get; set; }
         public string Imagem { get; set; }
 
+        [Moeda]
         [Required(ErrorMessage = "O campo {0} é requerido!")]
         public decimal Valor { get; set; }
         [Display(Name = "Ativo?")]

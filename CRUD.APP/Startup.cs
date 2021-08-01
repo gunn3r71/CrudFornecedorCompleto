@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using CRUD.APP.Data;
+using CRUD.APP.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -12,6 +13,7 @@ using CRUD.Business.Interfaces;
 using CRUD.Data.Context;
 using CRUD.Data.Repository;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 
 namespace CRUD.APP
 {
@@ -42,6 +44,7 @@ namespace CRUD.APP
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+            services.AddSingleton<IValidationAttributeAdapterProvider, MoedaValidationAttributeAdapterProvider>();
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllersWithViews(options =>
