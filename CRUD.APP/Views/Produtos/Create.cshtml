@@ -19,7 +19,8 @@
             </div>
             <div class="form-group">
                 <label asp-for="Descricao" class=""></label>
-                <input asp-for="Descricao" class="form-control" />
+                <textarea asp-for="Descricao" class="form-control">
+                </textarea>
                 <span asp-validation-for="Descricao" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -50,8 +51,8 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Cadastrar" class="btn btn-primary" onclick="validateIMG()"/>
-                <a asp-action="Index" class="btn btn-info">Voltar</a>
+                <input type="submit" value="Cadastrar" class="btn btn-primary" onclick="validateIMG()" />
+                <a onclick="back()" class="btn btn-info">Voltar</a>
             </div>
         </form>
     </div>
