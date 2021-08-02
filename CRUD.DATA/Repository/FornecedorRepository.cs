@@ -24,7 +24,7 @@ namespace CRUD.Data.Repository
         {
             return await _context.Fornecedores.AsNoTracking()
                 .Include(f => f.Produtos)
-                .Include(f => f.Produtos)
+                .Include(f => f.Endereco)
                 .FirstOrDefaultAsync(f => f.Id == id);
         }
     }

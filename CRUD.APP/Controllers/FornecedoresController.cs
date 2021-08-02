@@ -29,7 +29,7 @@ namespace CRUD.APP.Controllers
         // GET: Fornecedores/Details/5
         public async Task<IActionResult> Details(Guid id)
         {
-            var fornecedorViewModel = await ObterFornecedorEndereco(id);
+            var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
             if (fornecedorViewModel == null)
             {
                 return NotFound();
@@ -93,7 +93,7 @@ namespace CRUD.APP.Controllers
         // GET: Fornecedores/Delete/5
         public async Task<IActionResult> Delete(Guid id)
         {
-            var fornecedor = await _fornecedorRepository.ObterFornecedorEndereco(id);
+            var fornecedor = await ObterFornecedorProdutosEndereco(id);
 
             if (fornecedor == null) return NotFound();
 
