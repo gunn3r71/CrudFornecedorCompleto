@@ -1,15 +1,15 @@
 ﻿@model CRUD.APP.ViewModels.FornecedorViewModel
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = $"Editar: {Model.Nome}";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>FornecedorViewModel</h4>
+<h4>Fornecedor</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -25,7 +25,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="TipoFornecedor" class=""></label>
-                <input asp-for="TipoFornecedor" class="form-control" />
+                <select asp-for="TipoFornecedor" class="form-control">
+                    <option value="1" selected="selected">Pessoa Fisica</option>
+                    <option value="2">Pessoa Juridica</option>
+                </select>
                 <span asp-validation-for="TipoFornecedor" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
@@ -34,14 +37,24 @@
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Salvar" class="btn btn-primary" />
             </div>
         </form>
+        
+        <div>
+            <partial name="_EnderecoDetails"/>
+        </div>
+        
+        <hr />
+        <h4>Produtos</h4>
+        <div>
+            <partial name="_ListagemProdutos" model="@Model.Produtos"/>
+        </div>
+        
+        <div>
+            <a onclick="back()" class="btn btn-info">Voltar</a>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
