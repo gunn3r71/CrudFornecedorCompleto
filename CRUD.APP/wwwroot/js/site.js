@@ -6,3 +6,7 @@
 function back() {
     window.history.back();
 }
+
+function reload() {
+    window.historu.forward();
+}
