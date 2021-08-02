@@ -52,7 +52,7 @@ namespace CRUD.APP.Extensions
 
     public class MoedaValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
     {
-        private IValidationAttributeAdapterProvider _baseProvider = new ValidationAttributeAdapterProvider();
+        private readonly IValidationAttributeAdapterProvider _baseProvider = new ValidationAttributeAdapterProvider();
 
         public IAttributeAdapter GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
         {
