@@ -9,24 +9,29 @@ using CRUD.Business.Models;
 
 namespace CRUD.APP.Controllers
 {
+    [Route("fornecedores")]
     public class FornecedoresController : BaseController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
+        private readonly IEnderecoRepository _enderecoRepository;
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IEnderecoRepository enderecoRepository, IMapper mapper)
         {
             _fornecedorRepository = fornecedorRepository;
+            _enderecoRepository = enderecoRepository;
             _mapper = mapper;
         }
 
         // GET: Fornecedores
+        [Route("listagem")]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos()));
         }
 
         // GET: Fornecedores/Details/5
+        [Route("detalhes/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
@@ -39,6 +44,7 @@ namespace CRUD.APP.Controllers
         }
 
         // GET: Fornecedores/Create
+        [Route("novo")]
         public IActionResult Create()
         {
             return View();
@@ -47,6 +53,7 @@ namespace CRUD.APP.Controllers
         // POST: Fornecedores/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("novo")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FornecedorViewModel fornecedorViewModel)
@@ -60,6 +67,7 @@ namespace CRUD.APP.Controllers
         }
 
         // GET: Fornecedores/Edit/5
+        [Route("editar/{id:guid}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
@@ -73,6 +81,7 @@ namespace CRUD.APP.Controllers
         // POST: Fornecedores/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Route("editar/{id:guid}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, FornecedorViewModel fornecedorViewModel)
@@ -86,11 +95,12 @@ namespace CRUD.APP.Controllers
 
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorRepository.Atualizar(fornecedor);
-            
+
             return RedirectToAction(nameof(Index));
         }
 
         // GET: Fornecedores/Delete/5
+        [Route("deletar/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var fornecedor = await ObterFornecedorProdutosEndereco(id);
@@ -103,6 +113,7 @@ namespace CRUD.APP.Controllers
         }
 
         // POST: Fornecedores/Delete/5
+        [Route("deletar/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -111,8 +122,45 @@ namespace CRUD.APP.Controllers
             if (fornecedorViewModel == null) return NotFound();
 
             await _fornecedorRepository.Remover(id);
-            
+
             return RedirectToAction(nameof(Index));
+        }
+
+        [Route("endereco/editar/{id:guid}")]
+        public async Task<IActionResult> AtualizarEndereco(Guid id)
+        {
+            var fornecedor = await ObterFornecedorEndereco(id);
+            if (fornecedor == null) return NotFound();
+
+            return PartialView("_EnderecoEdit", new FornecedorViewModel { Endereco = fornecedor.Endereco });
+        }
+
+        [Route("endereco/{id:guid}")]
+        public async Task<IActionResult> ObterEndereco(Guid id)
+        {
+            var fornecedor = await ObterFornecedorEndereco(id);
+
+            if (fornecedor is null) return NotFound();
+
+            return PartialView("_EnderecoDetails", new FornecedorViewModel { Endereco = fornecedor.Endereco });
+        }
+
+        [Route("endereco/editar/{id:guid}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AtualizarEndereco(FornecedorViewModel fornecedorViewModel)
+        {
+            ModelState.Remove("TipoFornecedor");
+            ModelState.Remove("Nome");
+            ModelState.Remove("Documento");
+            if (!ModelState.IsValid) return PartialView("_EnderecoEdit", fornecedorViewModel);
+
+            var endereco = _mapper.Map<Endereco>(fornecedorViewModel.Endereco);
+
+            await _enderecoRepository.Atualizar(endereco);
+
+            var url = Url.Action("ObterEndereco", "Fornecedores", new { Id = fornecedorViewModel.Endereco.FornecedorId });
+            return Json(new { Success = true, url });
         }
 
         private async Task<FornecedorViewModel> ObterFornecedorEndereco(Guid id)

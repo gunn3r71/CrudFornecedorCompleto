@@ -17,7 +17,7 @@ namespace CRUD.Data.Repository
 
         protected Repository(AppDbContext context)
         {
-            _context = context;
+            _context = context; 
             _dbEntity = _context.Set<T>();
         }
 

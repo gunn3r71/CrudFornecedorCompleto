@@ -41,7 +41,7 @@
             </div>
         </form>
         
-        <div>
+        <div id="EnderecoTarget">
             <partial name="_EnderecoDetails"/>
         </div>
         
@@ -51,6 +51,15 @@
             <partial name="_ListagemProdutos" model="@Model.Produtos"/>
         </div>
         
+        <div class="modal fade" id="modal-endereco-edit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div id="modalContent">
+                    </div>
+                </div>
+            </div>
+        </div>  
+
         <div>
             <a onclick="back()" class="btn btn-info">Voltar</a>
         </div>
@@ -59,4 +68,9 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            AjaxModal();
+        });
+    </script>
 }
