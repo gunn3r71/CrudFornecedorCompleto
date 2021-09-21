@@ -62,5 +62,11 @@ namespace CRUD.Business.Services
 
             await _enderecoRepository.Atualizar(endereco);
         }
+
+        public void Dispose()
+        {
+            _fornecedorRepository?.Dispose();
+            _enderecoRepository?.Dispose();
+        }
     }
 }

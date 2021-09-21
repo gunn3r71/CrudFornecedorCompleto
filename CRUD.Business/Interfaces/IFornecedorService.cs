@@ -4,7 +4,7 @@ using CRUD.Business.Models;
 
 namespace CRUD.Business.Interfaces
 {
-    public interface IFornecedorService
+    public interface IFornecedorService : IDisposable
     {
         Task Adicionar(Fornecedor fornecedor);
         Task Atualizar(Fornecedor fornecedor);
