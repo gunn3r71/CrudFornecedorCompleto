@@ -43,3 +43,51 @@ function AjaxModal() {
         }
     });
 }
+
+function limpaFormCep() {
+    $("#Endereco_Logradouro").val("");
+    $("#Endereco_Bairro").val("");
+    $("#Endereco_Cidade").val("");
+    $("#Endereco_Estado").val("");
+}
+
+function buscaCep() {
+    $(document).ready(() => {
+        $("#Endereco_Logradouro").val("");
+        $("#Endereco_Bairro").val("");
+        $("#Endereco_Cidade").val("");  
+        $("#Endereco_Estado").val("");  
+    });
+
+    $("#Endereco_Cep").blur(() => {
+        var cep = $("#Endereco_Cep").val().replace(/\D/g, '');
+        
+        if (cep != "") {
+            var validaCep = /^[0-9]{8}/;
+            if (validaCep.test(cep)) {
+                $("#Endereco_Logradouro").val("...");
+                $("#Endereco_Bairro").val("...");
+                $("#Endereco_Cidade").val("...");
+                $("#Endereco_Estado").val("...");
+
+                $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?",
+                    (data) => {
+                        if (!("erro" in data)) {
+                            $("#Endereco_Logradouro").val(data.logradouro);
+                            $("#Endereco_Bairro").val(data.bairro);
+                            $("#Endereco_Cidade").val(data.localidade);
+                            $("#Endereco_Estado").val(data.uf);
+                        } else {
+                            limpaFormCep();
+                            alert("CEP não encontrado.");
+                        }
+                    });
+            } else {
+                limpaFormCep();
+                alert("Formato de CEP inválido.");
+            }
+        } else {
+            limpaFormCep();
+        }
+    });
+}
