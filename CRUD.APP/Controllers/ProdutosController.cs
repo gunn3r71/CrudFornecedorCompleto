@@ -8,20 +8,23 @@ using CRUD.APP.ViewModels;
 using CRUD.Business.Interfaces;
 using CRUD.Business.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace CRUD.APP.Controllers
 {
     [Route("produtos")]
     public class ProdutosController : BaseController
     {
+        private readonly IProdutoService _produtoService;
         private readonly IProdutoRepository _produtoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IMapper _mapper;
 
-        public ProdutosController(IProdutoRepository produtoRepository, IFornecedorRepository fornecedorRepository, IMapper mapper)
+        public ProdutosController(IProdutoRepository produtoRepository, IFornecedorRepository fornecedorRepository, IProdutoService produtoService, IMapper mapper, INotificador notificador) : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _fornecedorRepository = fornecedorRepository;
+            _produtoService = produtoService;
             _mapper = mapper;
         }
 
@@ -77,7 +80,9 @@ namespace CRUD.APP.Controllers
             var produto = _mapper.Map<Produto>(produtoViewModel);
 
             produto.Imagem = imgPrefixo + produtoViewModel.ImagemUpload.FileName;
-            await _produtoRepository.Adicionar(produto);
+            await _produtoService.Adicionar(produto);
+
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -132,7 +137,9 @@ namespace CRUD.APP.Controllers
             produtoAtualizacao.Ativo = produtoViewModel.Ativo;
 
             var produto = _mapper.Map<Produto>(produtoAtualizacao);
-            await _produtoRepository.Atualizar(produto);
+            await _produtoService.Atualizar(produto);
+
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -161,7 +168,9 @@ namespace CRUD.APP.Controllers
             var produtoViewModel = await ObterProduto(id);
             if (produtoViewModel == null) return NotFound();
 
-            await _produtoRepository.Remover(id);
+            await _produtoService.Remover(id);
+
+            if (!OperacaoValida()) return View(produtoViewModel);
 
             return RedirectToAction(nameof(Index));
         }

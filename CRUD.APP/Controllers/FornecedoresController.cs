@@ -12,14 +12,14 @@ namespace CRUD.APP.Controllers
     [Route("fornecedores")]
     public class FornecedoresController : BaseController
     {
+        private readonly IFornecedorService _fornecedorService;
         private readonly IFornecedorRepository _fornecedorRepository;
-        private readonly IEnderecoRepository _enderecoRepository;
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IEnderecoRepository enderecoRepository, IMapper mapper)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IFornecedorService fornecedorService, IMapper mapper, INotificador notificador) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
-            _enderecoRepository = enderecoRepository;
+            _fornecedorService = fornecedorService;
             _mapper = mapper;
         }
 
@@ -61,7 +61,9 @@ namespace CRUD.APP.Controllers
             if (!ModelState.IsValid) return View(fornecedorViewModel);
 
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
-            await _fornecedorRepository.Adicionar(fornecedor);
+            await _fornecedorService.Adicionar(fornecedor);
+
+            if (!OperacaoValida()) return View(fornecedorViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -94,7 +96,9 @@ namespace CRUD.APP.Controllers
             if (!ModelState.IsValid) return View(fornecedorViewModel);
 
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
-            await _fornecedorRepository.Atualizar(fornecedor);
+            await _fornecedorService.Atualizar(fornecedor);
+
+            if (!OperacaoValida()) return View(fornecedorViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -121,7 +125,9 @@ namespace CRUD.APP.Controllers
             var fornecedorViewModel = await ObterFornecedorEndereco(id);
             if (fornecedorViewModel == null) return NotFound();
 
-            await _fornecedorRepository.Remover(id);
+            await _fornecedorService.Remover(id);
+
+            if (!OperacaoValida()) return View(fornecedorViewModel);
 
             return RedirectToAction(nameof(Index));
         }
@@ -156,8 +162,8 @@ namespace CRUD.APP.Controllers
             if (!ModelState.IsValid) return PartialView("_EnderecoEdit", fornecedorViewModel);
 
             var endereco = _mapper.Map<Endereco>(fornecedorViewModel.Endereco);
-
-            await _enderecoRepository.Atualizar(endereco);
+            
+            await _fornecedorService.AtualizarEndereco(endereco);
 
             var url = Url.Action("ObterEndereco", "Fornecedores", new { Id = fornecedorViewModel.Endereco.FornecedorId });
             return Json(new { Success = true, url });
