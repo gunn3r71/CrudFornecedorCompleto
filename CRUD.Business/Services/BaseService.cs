@@ -1,4 +1,6 @@
-﻿using CRUD.Business.Models;
+﻿using CRUD.Business.Interfaces;
+using CRUD.Business.Models;
+using CRUD.Business.Notifications;
 using FluentValidation;
 using FluentValidation.Results;
 
@@ -6,6 +8,13 @@ namespace CRUD.Business.Services
 {
     public abstract class BaseService
     {
+        protected BaseService(INotificador notificador)
+        {
+            _notificador = notificador;
+        }
+
+        private readonly INotificador _notificador;
+
         protected void Notify(ValidationResult validationResult) 
         {
             foreach (var error in validationResult.Errors)
@@ -16,7 +25,7 @@ namespace CRUD.Business.Services
 
         protected void Notify(string message)
         {
-            //Propagar erro até a camada de apresentação
+            _notificador.Handle(new Notificacao(message));
         }
 
         protected bool ExecutarValidacao<TV,TE>(TV validacao, TE entidade) where TV : AbstractValidator<TE> where TE : Entity
