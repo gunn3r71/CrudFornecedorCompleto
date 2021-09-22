@@ -91,3 +91,7 @@ function buscaCep() {
         }
     });
 }
+
+$(document).ready(() => {
+    $("#messageRetorno").fadeOut(1500);
+})

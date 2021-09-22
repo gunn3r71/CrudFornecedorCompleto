@@ -172,6 +172,8 @@ namespace CRUD.APP.Controllers
 
             if (!OperacaoValida()) return View(produtoViewModel);
 
+            TempData["Sucesso"] = "Fornecedor excluido com sucesso";
+
             return RedirectToAction(nameof(Index));
         }
 

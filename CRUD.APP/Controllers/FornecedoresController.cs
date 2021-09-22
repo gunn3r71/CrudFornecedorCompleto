@@ -128,6 +128,8 @@ namespace CRUD.APP.Controllers
             await _fornecedorService.Remover(id);
 
             if (!OperacaoValida()) return View(fornecedorViewModel);
+            
+            TempData["Sucesso"] = "Fornecedor excluido com sucesso";
 
             return RedirectToAction(nameof(Index));
         }
