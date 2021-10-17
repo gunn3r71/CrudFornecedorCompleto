@@ -9,15 +9,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRUD.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210718015759_AppMigration")]
-    partial class AppMigration
+    [Migration("20211017180137_TabelasEntidade")]
+    partial class TabelasEntidade
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.8");
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("CRUD.Business.Models.Endereco", b =>
                 {
@@ -149,7 +149,6 @@ namespace CRUD.Data.Migrations
                     b.HasOne("CRUD.Business.Models.Fornecedor", "Fornecedor")
                         .WithOne("Endereco")
                         .HasForeignKey("CRUD.Business.Models.Endereco", "FornecedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Fornecedor");
@@ -160,7 +159,6 @@ namespace CRUD.Data.Migrations
                     b.HasOne("CRUD.Business.Models.Fornecedor", "Fornecedor")
                         .WithMany("Produtos")
                         .HasForeignKey("FornecedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Fornecedor");
