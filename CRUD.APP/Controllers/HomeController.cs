@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using CRUD.APP.ViewModels;
+using Microsoft.AspNetCore.Http;
 
 namespace CRUD.APP.Controllers
 {
@@ -28,10 +29,31 @@ namespace CRUD.APP.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("erro/{code:int:length(3,3)}")]
+        public IActionResult Error(int code)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var modelError = new ErrorViewModel();
+            modelError.ErrorCode = code;
+
+            switch (code)
+            {
+                case StatusCodes.Status500InternalServerError:
+                    modelError.Titulo = "Algo deu errado!";
+                    modelError.Mensagem = "Ocorreu um erro! tente novamente mais tarde.";
+                    break;
+                case StatusCodes.Status404NotFound:
+                    modelError.Titulo = "Ops, página não encontrada!";
+                    modelError.Mensagem = "A página que você está procurando não existe.";
+                    break;
+                case StatusCodes.Status403Forbidden:
+                    modelError.Titulo = "Acesso negado!";
+                    modelError.Mensagem = "^Você não tem acesso à essa página.";
+                    break;
+                default:
+                    break;
+            }
+
+            return View(modelError);
         }
     }
 }
