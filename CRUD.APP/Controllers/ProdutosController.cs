@@ -8,11 +8,13 @@ using CRUD.APP.ViewModels;
 using CRUD.Business.Interfaces;
 using CRUD.Business.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Authorization;
+using static CRUD.APP.Filters.CustomAuthorize;
 
 namespace CRUD.APP.Controllers
 {
     [Route("produtos")]
+    [Authorize]
     public class ProdutosController : BaseController
     {
         private readonly IProdutoService _produtoService;
@@ -30,6 +32,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Produtos
         [Route("listagem")]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(
@@ -38,6 +41,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Produtos/Details/5
         [Route("detalhes/{id:guid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
 
@@ -53,6 +57,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Produtos/Create
         [Route("novo")]
+        [ClaimsAuthorize("Produtos", "Inserir")]
         public async Task<IActionResult> Create()
         {
             var produtoViewModel = await PopularFornecedores(new ProdutoViewModel());
@@ -64,6 +69,7 @@ namespace CRUD.APP.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Route("novo")]
         [HttpPost]
+        [ClaimsAuthorize("Produtos", "Inserir")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProdutoViewModel produtoViewModel)
         {
@@ -90,6 +96,7 @@ namespace CRUD.APP.Controllers
         //TODO "corrigir dados vindos para edição" 
         // GET: Produtos/Edit/5
         [Route("editar/{id:guid}")]
+        [ClaimsAuthorize("Produtos", "Atualizar")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
@@ -105,6 +112,7 @@ namespace CRUD.APP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Route("editar/{id:guid}")]
+        [ClaimsAuthorize("Produtos", "Atualizar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, ProdutoViewModel produtoViewModel)
@@ -147,6 +155,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Produtos/Delete/5
         [Route("deletar/{id:guid}")]
+        [ClaimsAuthorize("Produtos", "Remover")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var produtoViewModel = await ObterProduto(id);
@@ -161,6 +170,7 @@ namespace CRUD.APP.Controllers
 
         // POST: Produtos/Delete/5
         [Route("deletar/{id:guid}")]
+        [ClaimsAuthorize("Produtos", "Remover")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

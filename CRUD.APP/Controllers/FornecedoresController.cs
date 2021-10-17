@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using CRUD.APP.ViewModels;
 using CRUD.Business.Interfaces;
 using CRUD.Business.Models;
+using Microsoft.AspNetCore.Authorization;
+using static CRUD.APP.Filters.CustomAuthorize;
 
 namespace CRUD.APP.Controllers
 {
     [Route("fornecedores")]
+    [Authorize]
     public class FornecedoresController : BaseController
     {
         private readonly IFornecedorService _fornecedorService;
@@ -25,6 +28,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Fornecedores
         [Route("listagem")]
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterTodos()));
@@ -32,6 +36,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Fornecedores/Details/5
         [Route("detalhes/{id:guid}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(Guid id)
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
@@ -45,6 +50,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Fornecedores/Create
         [Route("novo")]
+        [ClaimsAuthorize("Fornecedores", "Inserir")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +60,7 @@ namespace CRUD.APP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Route("novo")]
+        [ClaimsAuthorize("Fornecedores", "Inserir")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FornecedorViewModel fornecedorViewModel)
@@ -70,6 +77,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Fornecedores/Edit/5
         [Route("editar/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Atualizar")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
@@ -84,6 +92,7 @@ namespace CRUD.APP.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Route("editar/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Atualizar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, FornecedorViewModel fornecedorViewModel)
@@ -105,6 +114,7 @@ namespace CRUD.APP.Controllers
 
         // GET: Fornecedores/Delete/5
         [Route("deletar/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Remover")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var fornecedor = await ObterFornecedorProdutosEndereco(id);
@@ -118,6 +128,7 @@ namespace CRUD.APP.Controllers
 
         // POST: Fornecedores/Delete/5
         [Route("deletar/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Remover")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -144,6 +155,7 @@ namespace CRUD.APP.Controllers
         }
 
         [Route("endereco/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Atualizar")]
         public async Task<IActionResult> ObterEndereco(Guid id)
         {
             var fornecedor = await ObterFornecedorEndereco(id);
@@ -154,6 +166,7 @@ namespace CRUD.APP.Controllers
         }
 
         [Route("endereco/editar/{id:guid}")]
+        [ClaimsAuthorize("Fornecedores", "Atualizar")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AtualizarEndereco(FornecedorViewModel fornecedorViewModel)
