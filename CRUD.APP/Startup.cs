@@ -35,7 +35,7 @@ namespace CRUD.APP
 
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                options.UseSqlServer(connectionString);
             });
 
             services.AddIdentityConfiguration(connectionString);
